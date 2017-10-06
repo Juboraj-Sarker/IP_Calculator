@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/welcome_screen"
+    android:background="@drawable/new_welcome_screen"
     android:onClick="home_activity_open"
     android:gravity="center"
     tools:context="juborajsarker.iplator.MainActivity">
@@ -17,7 +17,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="10dp">
+        android:padding="12dp"
+        android:background="#f6f9f6"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:elevation="4dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -49,11 +54,12 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Touch anywhere to continue..... "
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:textColor="#000"
-            android:textSize="18sp"/>
+            android:text="Touch here to continue"
+            android:padding="10dp"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:background="@color/colorPrimary"/>
 
 
     </LinearLayout>
