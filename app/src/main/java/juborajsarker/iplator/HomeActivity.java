@@ -28,6 +28,7 @@ import java.io.File;
 public class HomeActivity extends AppCompatActivity {
 
     InterstitialAd mInterstitialAd;
+    int count = 0;
 
     private EditText first_octate;
     private EditText second_octate;
@@ -89,28 +90,6 @@ public class HomeActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen1));
-
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("93448558CC721EBAD8FAAE5DA52596D3").build();
-
-        mInterstitialAd.loadAd(adRequest);
-
-
-
-        mInterstitialAd.setAdListener(new AdListener() {
-            public void onAdLoaded() {
-                showInterstitial();
-            }
-        });
-
-
-
-
-
-
 
 
 
@@ -263,6 +242,21 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void calculate(View view) {
+
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen1));
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("93448558CC721EBAD8FAAE5DA52596D3").build();
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
+
+
+
 
         if (first_octate.getText().toString().isEmpty() || second_octate.getText().toString().isEmpty() ||
                 third_octate.getText().toString().isEmpty() || fourth_octate.getText().toString().isEmpty()) {

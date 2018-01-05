@@ -14,13 +14,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
+
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,20 +34,20 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 
-
-        MobileAds.initialize(getApplicationContext(), getString(R.string.banner_home_footer));
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("93448558CC721EBAD8FAAE5DA52596D3").build();
-        mAdView.loadAd(adRequest);
-
-
-
-
-
-
     }
 
     public void home_activity_open(View view) {
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen1));
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("93448558CC721EBAD8FAAE5DA52596D3").build();
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
 
         startActivity(new Intent(MainActivity.this, HomeActivity.class));
 
@@ -177,5 +179,13 @@ public class MainActivity extends AppCompatActivity {
         }
         intent.addFlags(flags);
         return intent;
+    }
+
+
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 }
