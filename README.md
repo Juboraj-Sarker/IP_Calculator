@@ -1,0 +1,2 @@
+# IP_Calculator
+This application specially for networking person or the students who study in Computer Science. IP Calculator will help them to calculator 1. Network Address, 2. Subnet Mask, 3. First useable host, 4. Last useable host, 5. Broadcast Address from a given IP. Also it will show binary notation of all the field. This application can work with or without CIDR value. This is very much user friendly and also gives accurate value. 
