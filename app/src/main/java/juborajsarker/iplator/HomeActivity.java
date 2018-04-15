@@ -57,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     private TextView binary_last_host;
     private TextView binary_broadcast;
 
+
     int first_octate_value, second_octate_value, third_octate_value, fourth_octate_value;
     int cidr_value_integer;
 
