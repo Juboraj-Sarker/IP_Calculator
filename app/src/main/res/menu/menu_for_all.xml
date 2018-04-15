@@ -5,6 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.juborajsarker.agecalculator.Main2Activity">
 
+
+    <item
+        android:id="@+id/menu_remove_ads"
+        android:orderInCategory="0"
+        android:title="Remove Ads"
+        app:showAsAction="always"
+        android:onClick="removeAdds"/>
+
     <item
         android:id="@+id/menu_rate_app"
         android:orderInCategory="1"

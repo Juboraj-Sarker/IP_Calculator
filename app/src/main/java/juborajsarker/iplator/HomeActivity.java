@@ -2,11 +2,14 @@ package juborajsarker.iplator;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,11 +24,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 
 import java.io.File;
 
 public class HomeActivity extends AppCompatActivity {
+
+    boolean doubleBackToExitPressedOnce=false;
 
     InterstitialAd mInterstitialAd;
     int count = 0;
@@ -90,6 +97,9 @@ public class HomeActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+
+
 
 
 
@@ -228,6 +238,16 @@ public class HomeActivity extends AppCompatActivity {
         binary_first_host = (TextView) findViewById(R.id.binary_first_host_TV);
         binary_last_host = (TextView) findViewById(R.id.binary_last_host_TV);
         binary_broadcast = (TextView) findViewById(R.id.binary_broadcast_TV);
+
+
+
+
+
+
+        MobileAds.initialize(getApplicationContext(), getString(R.string.banner_home_footer_1));
+        AdView mAdView = (AdView) findViewById(R.id.adView1);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("93448558CC721EBAD8FAAE5DA52596D3").build();
+        mAdView.loadAd(adRequest);
     }
 
 
@@ -244,16 +264,23 @@ public class HomeActivity extends AppCompatActivity {
     public void calculate(View view) {
 
 
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen1));
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("93448558CC721EBAD8FAAE5DA52596D3").build();
-        mInterstitialAd.loadAd(adRequest);
+        count ++;
 
-        mInterstitialAd.setAdListener(new AdListener() {
-            public void onAdLoaded() {
-                showInterstitial();
-            }
-        });
+        if (count % 3 == 0){
+
+            mInterstitialAd = new InterstitialAd(this);
+            mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen1));
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("93448558CC721EBAD8FAAE5DA52596D3").build();
+            mInterstitialAd.loadAd(adRequest);
+
+            mInterstitialAd.setAdListener(new AdListener() {
+                public void onAdLoaded() {
+                    showInterstitial();
+                }
+            });
+
+        }
+
 
 
 
@@ -1148,7 +1175,26 @@ public class HomeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
 
-                onBackPressed();
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog);
+                } else {
+                    builder = new AlertDialog.Builder(this);
+                }
+                builder.setTitle("Thanks for using my app")
+                        .setMessage("Are you sure you want to really exit?")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                AppExit();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -1158,6 +1204,18 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    public void AppExit() {
+
+        this.finish();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+    /*int pid = android.os.Process.myPid();=====> use this if you want to kill your activity. But its not a good one to do.
+    android.os.Process.killProcess(pid);*/
+
+    }
 
     public void rateApp(MenuItem item) {
 
@@ -1231,4 +1289,63 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
+
+    public void ipCalculatorPro(View view) {
+
+        removeAds();
+
+    }
+
+
+
+    public void removeAds() {
+        try {
+            Intent rateIntent = removeAdsIntentForUrl("market://details");
+            startActivity(rateIntent);
+        }
+        catch (ActivityNotFoundException e)
+        {
+            Intent rateIntent = removeAdsIntentForUrl("https://play.google.com/store/apps/details");
+            startActivity(rateIntent);
+        }
+    }
+
+    private Intent removeAdsIntentForUrl(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format("%s?id=%s", url, "com.juborajsarker.ipcalculatorpro" )));
+        int flags = Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK;
+        if (Build.VERSION.SDK_INT >= 21)
+        {
+            flags |= Intent.FLAG_ACTIVITY_NEW_DOCUMENT;
+        }
+        else
+        {
+            //noinspection deprecation
+            flags |= Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET;
+        }
+        intent.addFlags(flags);
+        return intent;
+    }
+
+    public void removeAdds(MenuItem item) {
+
+        removeAds();
+    }
 }
